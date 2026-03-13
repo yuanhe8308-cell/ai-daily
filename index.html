@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🤖 AI Daily · 每日简报</title>
+    <meta name="theme-color" content="#050508">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #050508;
+            --bg-card: #0d0d14;
+            --bg-card-hover: #14141f;
+            --accent: #00f0ff;
+            --accent-pink: #ff00aa;
+            --accent-purple: #aa00ff;
+            --accent-green: #00ff88;
+            --accent-orange: #ff8800;
+            --text: #e8e8e8;
+            --text-dim: #6a6a7a;
+            --border: rgba(0, 240, 255, 0.15);
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Noto Sans SC', 'JetBrains Mono', sans-serif;
+            background: var(--bg-deep);
+            color: var(--text);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: 
+                linear-gradient(90deg, rgba(0,240,255,0.03) 1px, transparent 1px),
+                linear-gradient(rgba(0,240,255,0.03) 1px, transparent 1px),
+                radial-gradient(ellipse at 50% 0%, rgba(170,0,255,0.15) 0%, transparent 60%);
+            background-size: 50px 50px, 50px 50px, 100% 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 1px, transparent 1px, transparent 3px);
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.4;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        header {
+            text-align: center;
+            padding: 60px 0 40px;
+            position: relative;
+            margin-bottom: 40px;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            box-shadow: 0 0 20px var(--accent), 0 0 40px var(--accent-purple);
+        }
+        
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent), var(--accent-pink), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            animation: glitch 3s infinite;
+        }
+        
+        @keyframes glitch {
+            0%, 90%, 100% { transform: translate(0); }
+            92% { transform: translate(-2px, 1px); }
+            94% { transform: translate(2px, -1px); }
+        }
+        
+        .subtitle {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-pink);
+            margin-top: 15px;
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+        }
+        
+        .date {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent);
+            margin-top: 10px;
+            font-size: 0.9rem;
+            letter-spacing: 0.3em;
+        }
+        
+        .section {
+            margin: 50px 0;
+        }
+        
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: var(--accent);
+            border-left: 4px solid var(--accent);
+            padding-left: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+        }
+        
+        .news-card, .skill-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            padding: 18px;
+            margin: 15px 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .news-card:hover, .skill-card:hover {
+            transform: translateX(8px);
+            border-color: var(--accent);
+            background: var(--bg-card-hover);
+            box-shadow: 0 0 20px rgba(0,240,255,0.15);
+        }
+        
+        .skill-card { border-left-color: var(--accent-pink); }
+        .skill-card:hover { border-color: var(--accent-pink); box-shadow: 0 0 20px rgba(255,0,170,0.15); }
+        
+        .news-card h3, .skill-name {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .news-card h3 a, .skill-name a {
+            color: var(--text);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .news-card h3 a:hover, .skill-name a:hover {
+            color: var(--accent);
+        }
+        
+        .skill-name a:hover { color: var(--accent-pink); }
+        
+        .news-card p { font-size: 0.85rem; color: var(--text-dim); line-height: 1.6; }
+        
+        .card-meta {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+        }
+        
+        .source-tag {
+            background: rgba(170,0,255,0.2);
+            color: var(--accent-purple);
+            padding: 2px 8px;
+            border-radius: 3px;
+        }
+        
+        .skill-stats {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--accent-orange);
+        }
+        
+        .skill-desc {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-top: 8px;
+        }
+        
+        .tag {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(0,240,255,0.1), rgba(170,0,255,0.1));
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 3px 10px;
+            font-size: 0.65rem;
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-right: 8px;
+        }
+        
+        .tag.python { border-color: var(--accent-green); color: var(--accent-green); }
+        .tag.hot { border-color: var(--accent-pink); color: var(--accent-pink); background: linear-gradient(135deg, rgba(255,0,170,0.1), transparent); }
+        
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+            margin-top: 60px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        footer span { color: var(--accent-purple); }
+        
+        @media (max-width: 768px) { h1 { font-size: 1.8rem; } .container { padding: 15px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 AI Daily</h1>
+            <div class="subtitle">每日AI资讯与技能精选</div>
+            <div class="date">2026年03月13日 Friday</div>
+        </header>
+        
+        <main>
+
+            <div class="section">
+                <div class="section-title">🔥 今日焦点</div>
+
+            <div class="news-card">
+                <h3><a href="https://36kr.com/p/3720969176988041?f=rss" target="_blank">科氪 | AWE 2026再携重磅阵容，MOVA全面披露芯片战略，擎画“主动时代”技术版图</a></h3>
+                <p>
+ 
+ 
+  2026年3月12日，中国上海——当人工智能加速从模型能力走向系统能力，家庭场景正成为AI规模化落地的关键单元。今日，全球超高端AI智慧生活引领者MOVA在中国家电及消费电子博览会（AWE 2026）开幕首日，首次系统披露自研芯片战略，并对外阐释其“家庭AI系统”技术架构及多项生态布局</p>
+                <div class="card-meta">
+                    <span class="source-tag">36KR</span>
+                </div>
+            </div>
+
+            <div class="news-card">
+                <h3><a href="https://www.ifanr.com/1657523?utm_source=rss&utm_medium=rss&utm_campaign=" target="_blank">美的发布了家居智能体 MevoX，想让智能家居更懂你</a></h3>
+                <p>智能家居的叙事已经发生变化——从「控制设备」，走向「理解生活」。#欢迎关注爱范儿官方微信公众号：爱范儿（微信号：ifanr），更多精彩内容第一时间为您奉上。
+爱范儿 |
+原文链接 ·
+查看评论 ·
+新浪微博
+
+
+
+
+ </p>
+                <div class="card-meta">
+                    <span class="source-tag">IFANR</span>
+                </div>
+            </div>
+
+            </div>
+
+            <div class="section">
+                <div class="section-title">💰 融资风向</div>
+
+            <div class="news-card">
+                <h3><a href="https://36kr.com/p/3720572708665989?f=rss" target="_blank">阿里领投、腾讯追加，脑机接口公司「阶梯医疗」获5亿元战略融资 | 36氪首发</a></h3>
+                <p>
+ 
+ 
+  36氪获悉，脑机接口企业「阶梯医疗」近日获5亿元战略融资，由阿里巴巴领投，国投创合跟投；老股东腾讯、源来资本、奥博资本、元禾原点、启明创投、礼来亚洲基金、源码资本、上海国投先导持续跟进，启峰资本担任独家财务顾问。近一年间，阶梯医疗累计融资额达到11亿元。
+  2025年12月，阶梯医疗</p>
+                <div class="card-meta">
+                    <span class="source-tag">36KR</span>
+                </div>
+            </div>
+
+            <div class="news-card">
+                <h3><a href="https://36kr.com/newsflashes/3721145382500737?f=rss" target="_blank">央行：2026年2月末社会融资规模存量为451.4万亿元，同比增长8.2%</a></h3>
+                <p>36氪获悉，据央行，初步统计，2026年2月末社会融资规模存量为451.4万亿元，同比增长8.2%。其中，对实体经济发放的人民币贷款余额为274.15万亿元，同比增长6.1%；对实体经济发放的外币贷款折合人民币余额为1.08万亿元，同比下降11%；委托贷款余额为11.28万亿元，同比增长0.3%；信</p>
+                <div class="card-meta">
+                    <span class="source-tag">36KR</span>
+                </div>
+            </div>
+
+            <div class="news-card">
+                <h3><a href="https://www.ifanr.com/1657947?utm_source=rss&utm_medium=rss&utm_campaign=" target="_blank">中国 AI 视频赛道最大单笔融资，为什么给了爱诗科技</a></h3>
+                <p>3 亿美元，押注不只是 AI 视频#欢迎关注爱范儿官方微信公众号：爱范儿（微信号：ifanr），更多精彩内容第一时间为您奉上。
+爱范儿 |
+原文链接 ·
+查看评论 ·
+新浪微博
+
+
+
+
+ </p>
+                <div class="card-meta">
+                    <span class="source-tag">IFANR</span>
+                </div>
+            </div>
+
+            </div>
+
+            <div class="section">
+                <div class="section-title">🛠️ 工具产品</div>
+
+            <div class="news-card">
+                <h3><a href="https://36kr.com/p/3720613899958912?f=rss" target="_blank">8点1氪丨微信新功能可“忽略”语音/视频来电；多所高校紧急禁用AI龙虾；苹果折叠屏顶配或超2万元</a></h3>
+                <p>
+ 
+ 
+  今日热点导览
+  腾讯回应OpenClaw之父Peter的“抄袭”指责：希望继续支持生态
+  中国灵活就业人员超2.4亿，参加职工保险支持政策将出台
+  苹果回应有人利用“14天无理由退货”换屏退货赚差价
+  曝千问郁博文加入字节跳动，字节暂未回应
+  今年以来多家非银支付机构调整高管</p>
+                <div class="card-meta">
+                    <span class="source-tag">36KR</span>
+                </div>
+            </div>
+
+            <div class="news-card">
+                <h3><a href="https://www.tmtpost.com/7912647.html" target="_blank">从“工具”到“引擎”：2026年企业AI转型的六大核心行动指南</a></h3>
+                <p>2026年企业AI竞赛的胜负手，将取决于能否以业务价值为核心，构建一个技术底座稳固、组织人才适配、生态协同紧密的体系化能力，从而真正将AI的潜力转化为可持续的竞争优势。</p>
+                <div class="card-meta">
+                    <span class="source-tag">TMTPOST</span>
+                </div>
+            </div>
+
+            </div>
+
+            <div class="section">
+                <div class="section-title">🐙 GitHub 热门项目 TOP 10</div>
+
+            <div class="skill-card">
+                <div class="card-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+                    <div class="skill-name"><a href="https://github.com/openclaw/openclaw" target="_blank">openclaw/openclaw</a></div>
+                    <div class="skill-stats">★ 309,479</div>
+                </div>
+                <div class="skill-desc">Your own personal AI assistant. Any OS. Any Platform. The lobster way. 🦞 </div>
+            </div>
+
+            <div class="skill-card">
+                <div class="card-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+                    <div class="skill-name"><a href="https://github.com/x1xhlol/system-prompts-and-models-of-ai-tools" target="_blank">x1xhlol/system-prompts-and-models-of-ai-tools</a></div>
+                    <div class="skill-stats">★ 130,632</div>
+                </div>
+                <div class="skill-desc">FULL Augment Code, Claude Code, Cluely, CodeBuddy, Comet, Cursor, Devin AI, Junie, Kiro, Leap.new, L</div>
+            </div>
+
+            <div class="skill-card">
+                <div class="card-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+                    <div class="skill-name"><a href="https://github.com/google-gemini/gemini-cli" target="_blank">google-gemini/gemini-cli</a></div>
+                    <div class="skill-stats">★ 97,511</div>
+                </div>
+                <div class="skill-desc">An open-source AI agent that brings the power of Gemini directly into your terminal.</div>
+            </div>
+
+            <div class="skill-card">
+                <div class="card-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+                    <div class="skill-name"><a href="https://github.com/github/spec-kit" target="_blank">github/spec-kit</a></div>
+                    <div class="skill-stats">★ 76,403</div>
+                </div>
+                <div class="skill-desc">💫 Toolkit to help you get started with Spec-Driven Development</div>
+            </div>
+
+            <div class="skill-card">
+                <div class="card-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+                    <div class="skill-name"><a href="https://github.com/affaan-m/everything-claude-code" target="_blank">affaan-m/everything-claude-code</a></div>
+                    <div class="skill-stats">★ 74,133</div>
+                </div>
+                <div class="skill-desc">The agent harness performance optimization system. Skills, instincts, memory, security, and research</div>
+            </div>
+
+            <div class="skill-card">
+                <div class="card-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+                    <div class="skill-name"><a href="https://github.com/upstash/context7" target="_blank">upstash/context7</a></div>
+                    <div class="skill-stats">★ 48,837</div>
+                </div>
+                <div class="skill-desc">Context7 Platform -- Up-to-date code documentation for LLMs and AI code editors</div>
+            </div>
+
+            <div class="skill-card">
+                <div class="card-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+                    <div class="skill-name"><a href="https://github.com/sansan0/TrendRadar" target="_blank">sansan0/TrendRadar</a></div>
+                    <div class="skill-stats">★ 48,821</div>
+                </div>
+                <div class="skill-desc">⭐AI-driven public opinion &amp; trend monitor with multi-platform aggregation, RSS, and smart alerts.🎯 告</div>
+            </div>
+
+            <div class="skill-card">
+                <div class="card-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+                    <div class="skill-name"><a href="https://github.com/ComposioHQ/awesome-claude-skills" target="_blank">ComposioHQ/awesome-claude-skills</a></div>
+                    <div class="skill-stats">★ 43,611</div>
+                </div>
+                <div class="skill-desc">A curated list of awesome Claude Skills, resources, and tools for customizing Claude AI workflows</div>
+            </div>
+
+            <div class="skill-card">
+                <div class="card-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+                    <div class="skill-name"><a href="https://github.com/nextlevelbuilder/ui-ux-pro-max-skill" target="_blank">nextlevelbuilder/ui-ux-pro-max-skill</a></div>
+                    <div class="skill-stats">★ 40,739</div>
+                </div>
+                <div class="skill-desc">An AI SKILL that provide design intelligence for building professional UI/UX multiple platforms</div>
+            </div>
+
+            <div class="skill-card">
+                <div class="card-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+                    <div class="skill-name"><a href="https://github.com/bmad-code-org/BMAD-METHOD" target="_blank">bmad-code-org/BMAD-METHOD</a></div>
+                    <div class="skill-stats">★ 40,471</div>
+                </div>
+                <div class="skill-desc">Breakthrough Method for Agile Ai Driven Development</div>
+            </div>
+
+            </div>
+
+            <div class="section">
+                <div class="section-title">💎 Agent Skills 精选</div>
+
+            <div class="skill-card">
+                <div class="card-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+                    <div class="skill-name"><a href="https://github.com/alirezarezvani/claude-skills/tree/main/skill-security-auditor" target="_blank">skill-security-auditor</a></div>
+                    <div class="tag hot">Skill</div>
+                </div>
+                <div class="skill-desc">🔒 安全扫描 - 检查Skill中的恶意代码</div>
+            </div>
+
+            <div class="skill-card">
+                <div class="card-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+                    <div class="skill-name"><a href="https://github.com/alirezarezvani/claude-skills/tree/main/agent-designer" target="_blank">agent-designer</a></div>
+                    <div class="tag hot">Skill</div>
+                </div>
+                <div class="skill-desc">🤖 Multi-Agent编排、工具模式、性能评估</div>
+            </div>
+
+            <div class="skill-card">
+                <div class="card-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+                    <div class="skill-name"><a href="https://github.com/alirezarezvani/claude-skills/tree/main/rag-architect" target="_blank">rag-architect</a></div>
+                    <div class="tag hot">Skill</div>
+                </div>
+                <div class="skill-desc">📚 RAG流水线构建、Chunk优化、检索评估</div>
+            </div>
+
+            <div class="skill-card">
+                <div class="card-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+                    <div class="skill-name"><a href="https://github.com/alirezarezvani/claude-skills/tree/main/database-designer" target="_blank">database-designer</a></div>
+                    <div class="tag hot">Skill</div>
+                </div>
+                <div class="skill-desc">🗄️ Schema分析、ERD生成、索引优化</div>
+            </div>
+
+            <div class="skill-card">
+                <div class="card-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+                    <div class="skill-name"><a href="https://github.com/alirezarezvani/claude-skills/tree/main/ci-cd-pipeline-builder" target="_blank">ci-cd-pipeline-builder</a></div>
+                    <div class="tag hot">Skill</div>
+                </div>
+                <div class="skill-desc">🔄 GitHub Actions/GitLab CI 配置生成</div>
+            </div>
+
+            <div class="skill-card">
+                <div class="card-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+                    <div class="skill-name"><a href="https://github.com/alirezarezvani/claude-skills/tree/main/marketing-skills" target="_blank">marketing-skills</a></div>
+                    <div class="tag hot">Skill</div>
+                </div>
+                <div class="skill-desc">📣 43个营销技能 - SEO/CRO/内容/增长</div>
+            </div>
+
+            <div class="skill-card">
+                <div class="card-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+                    <div class="skill-name"><a href="https://github.com/alirezarezvani/claude-skills/tree/main/product-skills" target="_blank">product-skills</a></div>
+                    <div class="tag hot">Skill</div>
+                </div>
+                <div class="skill-desc">🎯 12个产品技能 - 用户研究/UI设计</div>
+            </div>
+
+            <div class="skill-card">
+                <div class="card-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+                    <div class="skill-name"><a href="https://github.com/alirezarezvani/claude-skills/tree/main/self-improving-agent" target="_blank">self-improving-agent</a></div>
+                    <div class="tag hot">Skill</div>
+                </div>
+                <div class="skill-desc">🧠 自我改进Agent - 自动记忆整理</div>
+            </div>
+
+            <div class="skill-card">
+                <div class="card-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+                    <div class="skill-name"><a href="https://github.com/alirezarezvani/claude-skills/tree/main/c-level-skills" target="_blank">c-level-skills</a></div>
+                    <div class="tag hot">Skill</div>
+                </div>
+                <div class="skill-desc">💼 28个C-Level顾问技能</div>
+            </div>
+
+            <div class="skill-card">
+                <div class="card-header" style="display:flex;justify-content:space-between;align-items:flex-start;">
+                    <div class="skill-name"><a href="https://github.com/alirezarezvani/claude-skills/tree/main/finance-skills" target="_blank">finance-skills</a></div>
+                    <div class="tag hot">Skill</div>
+                </div>
+                <div class="skill-desc">💰 财务分析 - DCF/SaaS指标</div>
+            </div>
+
+            </div>
+        </main>
+        
+        <footer>
+            <span>◆</span> AI Daily · 每日自动更新 <span>◆</span><br>
+            数据来源：36kr、ifanr、tmtpost、GitHub<br>
+            <span>2026年03月13日 Friday</span>
+        </footer>
+    </div>
+</body>
+</html>
